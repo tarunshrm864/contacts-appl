@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+
+#remove {
+    padding: 1px;
+    /* display: inline; */
+    width: 60px;
+    border-radius: 2px;
+    cursor: pointer;  
+    font-family: "Arial";
+    border: 0;
+    margin: 0 10px;
+    background: rgba(236, 96, 96, 0.808);
+    font-size: 15px;
+    line-height: 15px;
+    color: white;
+    box-sizing: content-box;
+}
+
+.collapsible {
+  background-color: #f1f1f1;
+  color: black;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active {
+  background-color: #f1f1f1;
+  
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+.topnav {
+  overflow: hidden;
+  background-color: lightblue;
+  padding-left: 10px;
+  width: 100%;
+}
+
+
+body{
+   background: #e2e1e0;
+   margin: 5px 5px 5px 5px;
+}
+
+.card-1 {
+  padding: 10px 50px 10px 10px;
+  background-color: white;
+  position: relative;
+  align-items: center;
+}
+
+.card {
+  margin: 0 auto;
+        float: none;
+        margin-bottom: 0px;
+        margin-top: 50px;
+        margin-left: 300px;
+        margin-right: 300px;
+        height: relative;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        /* padding: 10px 50px 10px 10px; */
+        background-color: white;
+        box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+        position: relative;
+        align-items: center;
+}
+.selected{
+    padding: 10px;
+}
+input[type=text]#search{
+    width: 96%;
+    height: 50px;
+}
+
+
+</style>
+<body>
+    <div class="card " id="card1">
+        <div class="topnav">
+            <h2>RM-PHONEBOOK</h2>
+          </div>
+          
+          
+    <div class="addcontact">
+        <form>
+          <label for="fname">Add Contact</label>
+          <input type="text" id="name" name="firstname" placeholder="Your name..">
+      
+          <label for="lname"></label>
+          <input type="text" id="email" name="lastname" placeholder="Your email..">
+      
+          <label for="lname"></label>
+          <input type="date" id="dob" name="lastname" placeholder="mm/dd/yyyy">
+
+          <label for="lname"></label>
+          <input type="number" id="phone" name="lastname" placeholder="Your Contact number..">
+        
+          <input type="submit" id="submit">
+        </form>
+      </div>
+    <ul  id='olTodo'>
+
+    </ul>
+    </div>
+</div>
+    <script>
+        
+        readOutput();
+        async function readOutput(){
+
+            try{
+                const olTodo=document.getElementById("olTodo")
+                while(olTodo.firstChild) olTodo.removeChild(olTodo.firstChild) 
+                const result =await fetch("http://localhost:8080/emp",{method:"GET"})
+                const todos=await result.json();
+                var i=0;
+                todos.forEach(t=>{
+                    console.log(t);
+                    const li=document.createElement("button");
+                    li.setAttribute('class', 'collapsible');
+                    li.setAttribute('id', 's');
+                    li.setAttribute('data-toggle', 'collapse');
+                    li.setAttribute('data-target', "p"+i);
+                    const remove=document.createElement("p"+i);
+                    remove.setAttribute('class','content')
+                    remove.setAttribute('id','remove')
+                    const email=document.createElement("p"+i);
+                    email.setAttribute('class','content')
+                    email.setAttribute('id','c')
+                    const dob=document.createElement("p"+i);
+                    dob.setAttribute('class','content')
+                    dob.setAttribute('id','c')
+                    const phone=document.createElement("p"+i);
+                    phone.setAttribute('class','content')
+                    phone.setAttribute('id','c')
+                    email.textContent=t.email;
+                    li.textContent=t.name;
+                    dob.textContent=t.dob;
+                    phone.textContent=t.phone;
+                    remove.textContent="Remove";
+                    remove.name=t.name;
+                    remove.addEventListener("click",async e=>{
+                        const jsonRequest={}
+                        jsonRequest.name=e.target.name;
+                        const result=await fetch("http://localhost:8080/emp",{method: "DELETE",
+                        headers:{"content-type":"application/json"}, body: JSON.stringify(jsonRequest)})
+                        const success=await result.json();
+                        readOutput()
+                        alert("Deleted!")
+                    })
+                    olTodo.appendChild(li);
+                    olTodo.appendChild(email);
+                    olTodo.appendChild(dob);
+                    olTodo.appendChild(phone);
+                    olTodo.appendChild(remove);
+                    i++;
+                })
+            }
+            catch (e){
+                console.log("Error reading get");
+            }
+            const submit=document.getElementById("submit");
+            submit.addEventListener("click",async e=>{
+                        const jsonRequest={}
+                        // jsonRequest.name=prompt("Enter your name!");
+                        jsonRequest.name=document.getElementById("name").value;
+                        jsonRequest.email=document.getElementById("email").value;
+                        jsonRequest.phone=document.getElementById("phone").value;
+                        jsonRequest.dob=document.getElementById("dob").value;
+                        const result=await fetch("http://localhost:8080/emp",{method: "POST",
+                        headers:{"content-type":"application/json"}, body: JSON.stringify(jsonRequest)})
+                        const success=await result.json();
+                        readOutput()
+                        alert("Created!")
+        })
+            
+        }
+    </script>
+</body>
+</html>
