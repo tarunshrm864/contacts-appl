@@ -8,7 +8,6 @@ app.use(express.json())
 const client=new Client({
     user:"postgres",
     password:"linkinpark08",
-    host:"localhost",
     port:5432,
     database:"postgres"
 })
