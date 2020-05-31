@@ -1,25 +1,20 @@
 const {Client}=require('pg')
 const express= require('express')
-
+const cors=require('cors');
+app.use(cors());
 const app=express();
 app.use(express.json())
 
-// const client=new Client({
-//     user:"postgres",
-//     password:"linkinpark08",
-//     host:"localhost",
-//     port:5432,
-//     database:"postgres"
-// })
 const client=new Client({
-    user:"ocqsxkbnykzdlf",
-    password:"a8f1673a79de2471e27987c546aba11786668e9a54f59f6710067764f6fa6705",
-    host:"ec2-3-222-150-253.compute-1.amazonaws.com",
+    user:"postgres",
+    password:"linkinpark08",
+    host:"localhost",
     port:5432,
-    database:"d143qmgarqp4lg",
-    uri:"postgres://ocqsxkbnykzdlf:a8f1673a79de2471e27987c546aba11786668e9a54f59f6710067764f6fa6705@ec2-3-222-150-253.compute-1.amazonaws.com:5432/d143qmgarqp4lg",
-    cli:"heroku pg:psql postgresql-adjacent-07896 --app contacts-appl",
+    database:"postgres"
 })
+// const client=new Client({
+//     connectionString: process.env.
+// })
 
 app.get("/",(req,res)=>res.sendFile(`${__dirname}/index.html`))
 start();
@@ -77,7 +72,7 @@ app.get("/emp", async (req,res)=>{
     res.send(JSON.stringify(rows))
 })
 
-app.listen(8080, ()=> console.log("Listening.."))
+app.listen(process.env.PORT, ()=> console.log("Listening.."))
 
 async function output(){
     try{

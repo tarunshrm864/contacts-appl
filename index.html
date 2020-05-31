@@ -136,7 +136,7 @@ input[type=text]#search{
             try{
                 const olTodo=document.getElementById("olTodo")
                 while(olTodo.firstChild) olTodo.removeChild(olTodo.firstChild) 
-                const result =await fetch("http://localhost:8080/emp",{method:"GET"})
+                const result =await fetch("/emp",{method:"GET"})
                 const todos=await result.json();
                 var i=0;
                 todos.forEach(t=>{
@@ -167,7 +167,7 @@ input[type=text]#search{
                     remove.addEventListener("click",async e=>{
                         const jsonRequest={}
                         jsonRequest.name=e.target.name;
-                        const result=await fetch("http://localhost:8080/emp",{method: "DELETE",
+                        const result=await fetch("/emp",{method: "DELETE",
                         headers:{"content-type":"application/json"}, body: JSON.stringify(jsonRequest)})
                         const success=await result.json();
                         readOutput()
@@ -192,7 +192,7 @@ input[type=text]#search{
                         jsonRequest.email=document.getElementById("email").value;
                         jsonRequest.phone=document.getElementById("phone").value;
                         jsonRequest.dob=document.getElementById("dob").value;
-                        const result=await fetch("http://localhost:8080/emp",{method: "POST",
+                        const result=await fetch("/emp",{method: "POST",
                         headers:{"content-type":"application/json"}, body: JSON.stringify(jsonRequest)})
                         const success=await result.json();
                         readOutput()
