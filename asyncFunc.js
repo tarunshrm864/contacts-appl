@@ -1,19 +1,16 @@
 const {Client}=require('pg')
 const express= require('express')
-const cors=require('cors');
-app.use(cors());
+
 const app=express();
 app.use(express.json())
 
 const client=new Client({
     user:"postgres",
     password:"linkinpark08",
+    host:"localhost",
     port:5432,
     database:"postgres"
 })
-// const client=new Client({
-//     connectionString: process.env.
-// })
 
 app.get("/",(req,res)=>res.sendFile(`${__dirname}/index.html`))
 start();
@@ -71,7 +68,7 @@ app.get("/emp", async (req,res)=>{
     res.send(JSON.stringify(rows))
 })
 
-app.listen(process.env.PORT, ()=> console.log("Listening.."))
+app.listen(8080, ()=> console.log("Listening.."))
 
 async function output(){
     try{
